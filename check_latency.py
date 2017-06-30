@@ -1,7 +1,6 @@
 from glob import glob
-from subprocess import check_output, call, Popen
-
 from multiprocessing.dummy import Pool
+from subprocess import Popen, call, check_output
 
 passFile = 'realpass.txt'
 
@@ -17,11 +16,8 @@ class Collector:
         Pretty print top 10 results by server name and latency
         """
 
-        listicle = sorted(
-            Collector.souls, key=lambda x: float(x['latency'])
-        )
-        all_ = [[x['latency'], x['name'].split('.')[0]]
-                for x in listicle][:10]
+        listicle = sorted(Collector.souls, key=lambda x: float(x['latency']))
+        all_ = [[x['latency'], x['name'].split('.')[0]] for x in listicle][:10]
         print('Server \t Latency')
         for pair in [all_[x] for x in range(10)]:
             print('{} \t {}'.format(pair[1], pair[0]))
@@ -73,18 +69,14 @@ def connect():
     with open(Collector.chicken_dinner()) as ovpn_read:
 
         if not any(
-            'auth-user-pass ' + passFile in line
-            for line in ovpn_read.readlines()
+            'auth-user-pass ' + passFile in line for line in ovpn_read.readlines()
         ):
 
             with open(Collector.chicken_dinner(), 'a+') as uName:
                 print('writing credential reference')
                 uName.write('auth-user-pass ' + passFile)
 
-    call(
-        str('sudo openvpn --config ' + Collector.chicken_dinner())
-        .split(' ')
-    )
+    call(str('sudo openvpn --config ' + Collector.chicken_dinner()).split(' '))
 
 
 def top_10():
