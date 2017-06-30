@@ -81,7 +81,7 @@ def connect():
                 print('writing credential reference')
                 uName.write('auth-user-pass ' + passFile)
 
-    check_output(
+    call(
         str('sudo openvpn --config ' + Collector.chicken_dinner())
         .split(' ')
     )
