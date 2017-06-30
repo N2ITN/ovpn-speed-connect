@@ -1,3 +1,2 @@
-cd ~/Desktop/nord
-echo "auth-user-pass pass.txt" >> us15.nordvpn.com.tcp443.ovpn
-sudo openvpn --config us15.nordvpn.com.tcp443.ovpn
+echo "auth-user-pass realpass.txt" >> us13.nordvpn.com.tcp443.ovpn
+sudo openvpn --config us13.nordvpn.com.tcp443.ovpn

@@ -1,7 +1,9 @@
 from glob import glob
-from subprocess import check_output
+from subprocess import check_output, call, Popen
 
 from multiprocessing.dummy import Pool
+
+passFile = 'realpass.txt'
 
 
 class Collector:
@@ -23,6 +25,9 @@ class Collector:
         print('Server \t Latency')
         for pair in [all_[x] for x in range(10)]:
             print('{} \t {}'.format(pair[1], pair[0]))
+
+    def chicken_dinner():
+        return '/'.join(['OVPN', Collector.souls[0]['name']])
 
 
 """ match tcp servers in the US in ovpn folder"""
@@ -57,6 +62,41 @@ def threadPool():
         pass
 
 
-threadPool()
-""" Show top 10 results """
-Collector.show()
+def update_servers():
+    call(['bash', 'update_servers.sh'])
+    call(['chmod', '777', 'update_servers.sh'])
+
+
+def connect():
+    print('Connecting to {}...'.format(Collector.chicken_dinner()))
+
+    with open(Collector.chicken_dinner()) as ovpn_read:
+
+        if not any(
+            'auth-user-pass ' + passFile in line
+            for line in ovpn_read.readlines()
+        ):
+
+            with open(Collector.chicken_dinner(), 'a+') as uName:
+                print('writing credential reference')
+                uName.write('auth-user-pass ' + passFile)
+
+    check_output(
+        str('sudo openvpn --config ' + Collector.chicken_dinner())
+        .split(' ')
+    )
+
+
+def top_10():
+    Collector.show()
+
+
+def main():
+    # update_servers()
+    threadPool()
+
+    print(Collector.chicken_dinner())
+    connect()
+
+
+main()
