@@ -1,0 +1,1 @@
+sudo openvpn OVPN/us361.nordvpn.com.tcp443.ovpn
