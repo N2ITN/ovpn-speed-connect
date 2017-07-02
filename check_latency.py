@@ -15,6 +15,7 @@ class Collector:
         Sort list of dictionaries by dictionary attribute 'latency' 
         Pretty print top 10 results by server name and latency
         """
+
         print(Collector.souls[0])
         listicle = sorted(Collector.souls, key=lambda x: float(x['latency']))
         all_ = [[x['latency'], x['name'].split('.')[0]] for x in listicle][:10]
@@ -24,11 +25,6 @@ class Collector:
 
     def chicken_dinner():
         return '/'.join(['OVPN', Collector.souls[0]['name']])
-
-
-""" match tcp servers in the US in ovpn folder"""
-match = 'us'
-all_opvn = glob('./OVPN/' + match + '*' + 'tcp*')
 
 
 def cycle(ovpn):
@@ -42,7 +38,9 @@ def cycle(ovpn):
         arg = 'ping -c 1 -w 1 ' + ip
         try:
             ping = check_output(arg.split(' '))
+
             delay = str(ping).split('time=')[1].split(' ')[0]
+
             Collector.souls.append({
                 'name': ovpn.split('/')[-1],
                 'ip': ip,
@@ -50,12 +48,19 @@ def cycle(ovpn):
             })
         except Exception as e:
             Collector.errors.append(e)
+            # raise IOError
 
 
 def threadPool():
     """ DO IT 100 TIMES AT ONCE """
-    for i in Pool(100).imap(cycle, all_opvn):
+    for i in Pool(100).imap(cycle, get_servers()):
         pass
+
+
+def get_servers():
+    """ match tcp servers in the US in ovpn folder"""
+    match = 'us'
+    return glob('./OVPN/' + match + '*' + 'tcp*')
 
 
 def update_servers():
@@ -72,6 +77,7 @@ def connect():
         if not any(
             'auth-user-pass ' + passFile in line for line in ovpn_read.readlines()
         ):
+
             with open(Collector.chicken_dinner(), 'a+') as uName:
                 print('writing credential reference')
                 uName.write('auth-user-pass ' + passFile + '\n')
