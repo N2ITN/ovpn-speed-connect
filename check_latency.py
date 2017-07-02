@@ -15,7 +15,7 @@ class Collector:
         Sort list of dictionaries by dictionary attribute 'latency' 
         Pretty print top 10 results by server name and latency
         """
-
+        print(Collector.souls[0])
         listicle = sorted(Collector.souls, key=lambda x: float(x['latency']))
         all_ = [[x['latency'], x['name'].split('.')[0]] for x in listicle][:10]
         print('Server \t Latency')
@@ -59,24 +59,30 @@ def threadPool():
 
 
 def update_servers():
+    """ Updates the servers """
     call(['bash', 'update_servers.sh'])
     call(['chmod', '777', 'update_servers.sh'])
 
 
 def connect():
+    """ Add credentials to file for fastest ovpn file """
+
     print('Connecting to {}...'.format(Collector.chicken_dinner()))
-
     with open(Collector.chicken_dinner()) as ovpn_read:
-
         if not any(
             'auth-user-pass ' + passFile in line for line in ovpn_read.readlines()
         ):
-
             with open(Collector.chicken_dinner(), 'a+') as uName:
                 print('writing credential reference')
-                uName.write('auth-user-pass ' + passFile)
+                uName.write('auth-user-pass ' + passFile + '\n')
+                uName.write('dhcp-option DNS 8.8.8.8')
+            with open(Collector.chicken_dinner()) as uName:
+                [print(line) for line in uName.readlines()]
 
-    call(str('sudo openvpn --config ' + Collector.chicken_dinner()).split(' '))
+    with open('connect_vpn.sh', 'w') as c:
+        c.write('sudo openvpn ' + Collector.chicken_dinner())
+    # exit()
+    # call(str('sudo openvpn ' + Collector.chicken_dinner()).split(' '))
 
 
 def top_10():
@@ -84,11 +90,12 @@ def top_10():
 
 
 def main():
+    #TODO add update servers check 24 hour 
     # update_servers()
     threadPool()
-
-    print(Collector.chicken_dinner())
-    connect()
+    print(Collector.show())
+    # print(Collector.chicken_dinner())
+    # connect()
 
 
 main()
