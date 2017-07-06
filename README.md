@@ -1,2 +1,6 @@
 # ovpn-speed-connect
-Python Library to update ovpn files, ping &amp; connect to fastest server.
+Python Library to connect to fastest VPN from your provider.
+
+* Updates ovpn files
+* Ping servers
+* Auto-connect to fastest
