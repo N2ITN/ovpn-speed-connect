@@ -5,7 +5,8 @@ zip
 __pycache__/
 *.py[cod]
 *$py.class
-
+.pylintrc
+tags
 # C extensions
 *.so
 # Distribution / packaging
