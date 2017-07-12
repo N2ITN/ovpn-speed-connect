@@ -57,6 +57,18 @@ def threadPool(all_opvn):
         pass
 
 def main():
+    # Soooo when I'm gonna use a singleton class, I usually use it as a runtime memory-cache.
+    # That said, singletons in a script this short are usually for conceptualization.
+
+    # THEREFORE: I feel like soma' my changes may be subjective :/
+
+    # Not this main() function tho. GLOBALS R BAD.
+    # Now you can import this module without running it! ^_^
+
+    init_the_guidance = HighSchoolGuidanceCounselor()
+    # superfluous but fuckit.
+    assert 'souls', 'errors' in vars(init_the_guidance).keys()
+
     """ match tcp servers in the US in ovpn folder"""
     match = 'us'
     
@@ -65,7 +77,7 @@ def main():
     threadPool(all_opvn=all_opvn)
     
     """ Show top 10 results """
-    HighSchoolGuidanceCounselor().show()
+    HighSchoolGuidanceCounselor.show()
 
 if __name__ == '__main__':
     main()
