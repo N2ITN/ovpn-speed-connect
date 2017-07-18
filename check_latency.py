@@ -1,6 +1,9 @@
+from __future__ import print_function
+
 __doc__ = ''' All in one for updating vpn files, pinging vpn, connecting to vpn with credentials file'''
-from glob import glob
+
 from os import path
+from glob import glob
 from multiprocessing.dummy import Pool
 from subprocess import call, getoutput
 
