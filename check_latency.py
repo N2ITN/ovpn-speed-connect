@@ -8,7 +8,6 @@ from multiprocessing.dummy import Pool
 from subprocess import call, getoutput
 
 
-
 class Collector(object):
     """
     This is a singleton state-machine class which:
@@ -44,8 +43,7 @@ class Collector(object):
         Pretty print top 10 results by server name and latency
         """
 
-        all_ = [[x['latency'], x['name'].split('.')[0]]
-                for x in cls.sort_results()][:10]
+        all_ = [[x['latency'], x['name'].split('.')[0]] for x in cls.sort_results()][:10]
         print('Server \t Latency')
         for pair in [all_[x] for x in range(10)]:
             print('{} \t {}'.format(pair[1], pair[0]))
@@ -55,6 +53,23 @@ class Collector(object):
         return '/'.join(['OVPN', cls.sort_results()[0]['name']])
 
 
+def get_servers(retry=False):
+    """
+    Step 0: match tcp servers in the US in ovpn folder. 
+    Get servers if none available
+    ====================================================
+    """
+    match = 'us'
+    opvn_targets = glob('./OVPN/' + match + '*' + 'tcp*')
+    if len(opvn_targets) < 1:
+        if retry == False:
+            update_servers()
+            return get_servers(retry=True)
+
+        else:
+            raise Exception('No opvn files saved')
+    return opvn_targets
+
 
 def update_servers():
     """
@@ -63,27 +78,17 @@ def update_servers():
     """
     call(['sudo', 'bash', 'update_servers.sh'])
 
-def threadPool():
+
+def threadPool(servers):
     """
     Step 2: collect latencies and store them inside Collector.
     ==========================================================
      - & DO IT 300 TIMES AT ONCE
     """
     # for safety
-    servers = get_servers()
     for i in Pool(300).imap(cycle, servers):
         pass
 
-
-def get_servers():
-    """
-    Step 2a: match tcp servers in the US in ovpn folder.
-    ====================================================
-    """
-    match = 'us'
-    opvn_targets = glob('./OVPN/' + match + '*' + 'tcp*')
-    assert len(opvn_targets) > 1
-    return opvn_targets
 
 def cycle(ovpn):
     """
@@ -97,13 +102,10 @@ def cycle(ovpn):
         try:
             ping = getoutput(arg)
             delay = ping.split()[3].split('/')[0]
-            Collector.souls.append({
-                'name': ovpn.split('/')[-1],
-                'ip': ip,
-                'latency': float(delay)
-            })
+            Collector.souls.append({'name': ovpn.split('/')[-1], 'ip': ip, 'latency': float(delay)})
         except IndexError as e:
             Collector.errors.append(e)
+
 
 def show_top_10():
     """
@@ -112,6 +114,7 @@ def show_top_10():
     """
     Collector.show()
     pass
+
 
 def connect_vpn(pass_file_pth):
     """
@@ -122,10 +125,7 @@ def connect_vpn(pass_file_pth):
     print('Connecting to {}...'.format(Collector.chicken_dinner()))
 
     with open(Collector.chicken_dinner()) as ovpn_read:
-        if not any(
-            'auth-user-pass ' + pass_file_pth in line
-            for line in ovpn_read.readlines()
-        ):
+        if not any('auth-user-pass ' + pass_file_pth in line for line in ovpn_read.readlines()):
 
             with open(Collector.chicken_dinner(), 'a+') as uName:
                 print('writing credential reference')
@@ -141,14 +141,16 @@ def connect_vpn(pass_file_pth):
     call(start_vpn, shell=True)
 
 
-def main(passfile='realpass.txt',refresh=False, connect=False):
+def main(passfile='realpass.txt', refresh=False, connect=False):
     assert path.exists(path.realpath(passfile))
     #TODO add update servers check 24 hour
     #TODO: DO YOU WANT TO KEEP THIS SCRIPT RUNNING IN THE BACKGROUND ALWAYS OR DO YOU WANT TO MODIFY CRONTAB?
+
+    servers = get_servers()
     if refresh:
         update_servers()
 
-    threadPool()
+    threadPool(servers)
 
     show_top_10()
 
@@ -156,6 +158,7 @@ def main(passfile='realpass.txt',refresh=False, connect=False):
 
     if connect:
         connect_vpn(passfile)
+
 
 if __name__ == '__main__':
     main(refresh=False, connect=True)
