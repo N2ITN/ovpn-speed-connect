@@ -17,8 +17,8 @@ def main(args=None):
         # the only time rediculous if-else trees are acceptable:
         if arrgs.all:
             from speedyvpn.core import check_latency
-            if arrgs.default:
-                check_latency.main(arrgs.default)
+            if arrgs.passfile:
+                check_latency.main(arrgs.passfile)
             else:
                 check_latency.main()
     else:
