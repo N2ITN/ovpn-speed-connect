@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+#TODO: BETTER NAME. U WELCOM
 setup(name='speedyvpn',
       version='0.0.2',
 
@@ -22,11 +23,7 @@ setup(name='speedyvpn',
         ]
       },
 
-      install_requires= [
-            'azure',
-            'msrest',
-            'msrestazure',
-      ],
+      zipsafe=False,
 
-      zipsafe=False
+      install_requires= None
       )

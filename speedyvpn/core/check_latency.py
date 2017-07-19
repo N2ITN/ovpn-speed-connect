@@ -4,6 +4,7 @@ from speedyvpn.core.Collector import Collector
 from speedyvpn.utils.compat import sysencode
 
 from os import path
+import os
 from glob import glob
 from multiprocessing.dummy import Pool
 from subprocess import call, getoutput
@@ -36,13 +37,13 @@ def threadPool():
         pass
 
 
-def get_servers():
+def get_servers(ovpn_root_dir=os.getcwd()):
     """
     Step 2a: match tcp servers in the US in ovpn folder.
     ====================================================
     """
     match = 'us'
-    opvn_targets = glob('./OVPN/' + match + '*' + 'tcp*') #<--What is this?
+    opvn_targets = glob(sysencode(ovpn_root_dir + '/OVPN/' + match + '*' + 'tcp*')) #<--What is this?
     assert len(opvn_targets) > 1
     return opvn_targets
 
@@ -54,8 +55,8 @@ def cycle(ovpn):
     with open(ovpn) as s:
         x = s.readlines()[13] #<--What is this.
         ip = x.split(' ')[1]
-        arg_pre_formating = 'ping -c 3 -w 3.5 ' + ip + ' | grep "mdev = "'
-        arg = sysencode(arg_pre_formating)
+        arg = sysencode('ping -c 3 -w 3.5 ' + ip + ' | grep "mdev = "')
+
         try:
             ping = getoutput(arg) #<-important.
             delay = ping.split()[3].split('/')[0] #<--What is this.
@@ -103,7 +104,7 @@ def connect_vpn(pass_file_pth):
     call(start_vpn, shell=True)
 
 
-def main(passfile='realpass.txt',refresh=False, connect=False):
+def main(passfile=None,refresh=False, connect=False):
     assert path.exists(path.realpath(passfile))
     #TODO add update servers check 24 hour
     #TODO: DO YOU WANT TO KEEP THIS SCRIPT RUNNING IN THE BACKGROUND ALWAYS OR DO YOU WANT TO MODIFY CRONTAB?
@@ -116,6 +117,9 @@ def main(passfile='realpass.txt',refresh=False, connect=False):
 
     print(Collector.chicken_dinner())
 
+    # putting the password-check down here because it's the only part that needs the password.
+    if not passfile:
+        raise IOError('please pass in a text file in the format: username + newline + password.')
     if connect:
         connect_vpn(passfile)
 

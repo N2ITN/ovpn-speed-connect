@@ -1,0 +1,1 @@
+from .check_latency import main as speedyvpn
