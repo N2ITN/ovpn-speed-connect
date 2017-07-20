@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from __future__ import print_function
 
 __doc__ = ''' All in one for updating vpn files, pinging vpn, connecting to vpn with credentials file'''
