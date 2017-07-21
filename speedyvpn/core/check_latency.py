@@ -4,6 +4,7 @@ __doc__ = ''' All in one for updating vpn files, pinging vpn, connecting to vpn 
 from speedyvpn import get_scripts
 from speedyvpn.core.Collector import Collector
 from speedyvpn.utils.compat import sysencode
+from speedyvpn.core.env_setup import update_servers_sh_replacement
 
 from os import path
 import os
@@ -12,21 +13,12 @@ from multiprocessing.dummy import Pool
 from subprocess import call, getoutput
 
 
-
-
-
-
 def update_servers():
     """
     Step 1: [OPTIONAL] update the list of VPN servers to check.
     ===========================================================
     """
-    # get_scripts is from the top-level __init__.py
-    update_servers_script_path = get_scripts('update_servers.sh')
-
-    args_pre_encoding = ['sudo', 'bash', update_servers_script_path]
-    args = [sysencode(i) for i in args_pre_encoding]
-    call(args)
+    update_servers_sh_replacement()
 
 
 def threadPool():
