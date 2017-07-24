@@ -120,7 +120,7 @@ def connect_vpn(pass_file_pth):
 
             with open(chicken_for_all_meals, 'ab+') as uName:
                 print('writing credential reference')
-                uName.write('auth-user-pass ' + pass_file_pth + '\n')
+                uName.write('auth-user-pass ' + sysencode(pass_file_pth) + '\n')
                 uName.write('dhcp-option DNS 8.8.8.8')
             with open(chicken_for_all_meals) as uName:
                 print(str([line for line in uName.readlines()][-2:]))
