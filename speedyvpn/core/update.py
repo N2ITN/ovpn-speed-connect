@@ -22,7 +22,9 @@ def check_ovpn_dir(root_dir_path):
 
     # 3 things are possible. Handle each.
     if not os.path.exists(ovpn_dir_path):
-        os.mkdir(ovpn_dir_path, mode=755)
+        os.mkdir(ovpn_dir_path)
+        # let's prevent anyone but us from using this.
+        os.chmod(ovpn_dir_path, 700)
         # cuz why not. It will be useful later.
         return ovpn_dir_path
 
