@@ -46,20 +46,20 @@ def get_servers(ovpn_root_dir=os.environ['HOME'], retry=False):
         ovpn_targets = glob(Collector.ovpn_dir_path + match + '*' + 'tcp*')
         print('if', ovpn_targets)
     else:
-        opvn_targets = glob(ovpn_root_dir + '/.speedyvpn/' + match + '*' + 'tcp*')
+        ovpn_targets = glob(ovpn_root_dir + '/.speedyvpn/' + match + '*' + 'tcp*')
         print('else', ovpn_targets)
     if len(ovpn_targets) < 1:
         if retry == False:
             update_servers()
             return get_servers(retry=True)
         else:
-            raise Exception('No opvn files saved')
-    return opvn_targets
+            raise Exception('No ovpn files saved')
+    return ovpn_targets
 
 
 def cycle(ovpn):
     """
-    Step 2b: Read opvn file, ping IP. Append latency to Collector object.
+    Step 2b: Read ovpn file, ping IP. Append latency to Collector object.
     =====================================================================
     """
     with open(ovpn) as s:
