@@ -108,11 +108,12 @@ def connect_vpn(pass_file_pth):
     Step 4: Add credentials to file for fastest ovpn file. Connect to VPN.
     ======================================================================
     """
-    if Collector.ovpn_dir_path:
-        chicken_for_all_meals = os.path.join(Collector.ovpn_dir_path, Collector.chicken_dinner())
-    else:
+    try:
+        chicken_for_all_meals = Collector.chicken_dinner()
+        assert path.exists(chicken_for_all_meals)
+    except AssertionError:
         chicken_for_all_meals = os.path.join(os.environ['HOME'], Collector.chicken_dinner())
-    print('Connecting to {}...'.format(Collector.chicken_dinner()))
+    print('Connecting via {}...'.format(chicken_for_all_meals))
 
     with open(chicken_for_all_meals) as ovpn_read:
         if not any('auth-user-pass ' + pass_file_pth in line for line in ovpn_read.readlines()):

@@ -45,7 +45,7 @@ class Collector(object):
         if not cls.ovpn_dir_path:
             return '/'.join(['.speedyvpn', cls.sort_results()[0]['name']])
         else:
-            from os.path import split
-            res = '/'.join([split(cls.ovpn_dir_path)[1], cls.sort_results()[0]['name']])
-            del split
+            from os.path import join
+            res = join(cls.ovpn_dir_path, cls.sort_results()[0]['name'])
+            del join
             return res
