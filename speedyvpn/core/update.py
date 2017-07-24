@@ -54,7 +54,7 @@ def download_and_extract_nord_zipfile(ovpn_dir_path):
     zip_data = urlopen('https://nordvpn.com/api/files/zip').read()
     zipfile_path = os.path.join(ovpn_dir_path, 'zipfile.zip')
     with open(zipfile_path, 'wb+') as nord_zipfile:
-        nord_zipfile.wrie(zip_data)
+        nord_zipfile.write(zip_data)
     # sanity check
     assert os.path.exists(zipfile_path)
     # lololol This could be more than one line...buttfuckit
