@@ -36,7 +36,7 @@ def threadPool():
         pass
 
 
-def get_servers(ovpn_root_dir=os.environ['HOME']):
+def get_servers(ovpn_root_dir=os.environ['HOME'], retry=False):
     """
     Step 2a: match tcp servers in the US in ovpn folder.
     ====================================================
