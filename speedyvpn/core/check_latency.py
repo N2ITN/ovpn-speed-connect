@@ -108,26 +108,29 @@ def connect_vpn(pass_file_pth):
     Step 4: Add credentials to file for fastest ovpn file. Connect to VPN.
     ======================================================================
     """
-
+    if Collector.ovpn_dir_path:
+        chicken_for_all_meals = os.path.join(Collector.ovpn_dir_path, Collector.chicken_dinner())
+    else:
+        chicken_for_all_meals = os.path.join(os.environ['HOME'], Collector.chicken_dinner())
     print('Connecting to {}...'.format(Collector.chicken_dinner()))
 
-    with open(Collector.chicken_dinner()) as ovpn_read:
+    with open(chicken_for_all_meals) as ovpn_read:
         if not any('auth-user-pass ' + pass_file_pth in line for line in ovpn_read.readlines()):
 
-            with open(Collector.chicken_dinner(), 'ab+') as uName:
+            with open(chicken_for_all_meals, 'ab+') as uName:
                 print('writing credential reference')
                 uName.write('auth-user-pass ' + pass_file_pth + '\n')
                 uName.write('dhcp-option DNS 8.8.8.8')
-            with open(Collector.chicken_dinner()) as uName:
+            with open(chicken_for_all_meals) as uName:
                 print(str([line for line in uName.readlines()][-2:]))
 
     # again, using get_scripts() to bring the shell scripts with the package when installing from pip.
     connect_vpn_shell_script = get_scripts('connect_vpn.sh')
 
     with open(connect_vpn_shell_script, 'wb+') as c:
-        c.write(sysencode(str('sudo openvpn ' + Collector.chicken_dinner())))
+        c.write(sysencode(str('sudo openvpn ' + chicken_for_all_meals)))
 
-    start_vpn = sysencode(str('sudo openvpn ' + Collector.chicken_dinner()))
+    start_vpn = sysencode(str('sudo openvpn ' + chicken_for_all_meals))
 
     # DUDE shell=True?! BAYD BAYD BAYD BAYD BAYD BAYD BAAAAYYAYAYAYAYAYAAYDDDDDD NOT GOOD BAYD.
     # that said, to fix this we'll need to instruct python to make a child process.
