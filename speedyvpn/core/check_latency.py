@@ -44,10 +44,10 @@ def get_servers(ovpn_root_dir=os.environ['HOME'], retry=False):
     match = 'us'
     if Collector.ovpn_dir_path:
         ovpn_targets = glob(os.path.join(Collector.ovpn_dir_path, match + '*' + 'tcp*'))
-        print('if', ovpn_targets)
+        # print('if', ovpn_targets)
     else:
         ovpn_targets = glob(ovpn_root_dir + '/.speedyvpn/' + match + '*' + 'tcp*')
-        print('else', ovpn_targets)
+        # print('else', ovpn_targets)
     if len(ovpn_targets) < 1:
         if retry == False:
             update_servers()
