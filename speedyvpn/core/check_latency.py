@@ -161,11 +161,14 @@ def main(passfile=None, refresh=True, connect=False):
     print(Collector.chicken_dinner())
 
     # putting the password-check down here because it's the only part that needs the password.
-    if not passfile:
-        raise IOError('please pass in a text file in the format: username + newline + password.')
-    if connect:
-        connect_vpn(passfile)
+    if passfile and not connect:
+        raise AssertionError("you passed in a uname & password but didn't ask to connect to anything.")
 
+    if connect:
+        if not passfile:
+            raise IOError('please pass in a text file in the format: username + newline + password.')
+        connect_vpn(passfile)
+    else: exit(0)
 
 if __name__ == '__main__':
     main(refresh=False, connect=True)
