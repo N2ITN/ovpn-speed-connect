@@ -8,7 +8,7 @@ def main(args=None):
     if not args:
         parser = argparse.ArgumentParser()
         #TODO: ADD ACTUAL ARGUMENTS.
-        parser.add_argument('-a', '--all', action='store_true', help="run all functions & connect")
+        parser.add_argument('-a', '--all', action='store_true', default=False, help="run all functions & connect")
         parser.add_argument('-p', '--passfile', nargs="?", default=None, help="pass in a txt file containing your credentials to connect with.")
 
         # activates the `...action='store_true...'` logic.

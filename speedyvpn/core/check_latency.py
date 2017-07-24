@@ -4,7 +4,7 @@ __doc__ = ''' All in one for updating vpn files, pinging vpn, connecting to vpn 
 from speedyvpn import get_scripts
 from speedyvpn.core.Collector import Collector
 from speedyvpn.utils.compat import sysencode
-from speedyvpn.core.env_setup import update_servers_sh_replacement
+from speedyvpn.core.update import update
 
 from os import path
 import os
@@ -13,13 +13,15 @@ from multiprocessing.dummy import Pool
 from subprocess import call, getoutput
 
 
-def update_servers():
+def update_servers(*args):
     """
     Step 1: [OPTIONAL] update the list of VPN servers to check.
     ===========================================================
     """
-    update_servers_sh_replacement()
-
+    if not args:
+        update()
+    else:
+        update(args[0])
 
 def threadPool():
     """
@@ -33,13 +35,13 @@ def threadPool():
         pass
 
 
-def get_servers(ovpn_root_dir=os.getcwd()):
+def get_servers(ovpn_root_dir=os.environ['HOME']):
     """
     Step 2a: match tcp servers in the US in ovpn folder.
     ====================================================
     """
     match = 'us'
-    opvn_targets = glob(sysencode(ovpn_root_dir + '/OVPN/' + match + '*' + 'tcp*'))  #<--What is this?
+    opvn_targets = glob(ovpn_root_dir + '/OVPN/' + match + '*' + 'tcp*')
     assert len(opvn_targets) > 1
     return opvn_targets
 
@@ -118,12 +120,13 @@ def connect_vpn(pass_file_pth):
 
     # DUDE shell=True?! BAYD BAYD BAYD BAYD BAYD BAYD BAAAAYYAYAYAYAYAYAAYDDDDDD NOT GOOD BAYD.
     # that said, to fix this we'll need to instruct python to make a child process.
-    ''' ANSWER: cool, you'll need to explain this to me '''
     #TODO: create a module which creates & "passes the baton" to a child-process.
+    ''' ANSWER: cool, you'll need to explain this to me '''
+    #TODO: wait... why shell=True is bad? POOR FORM. PERIOD. (aka Idk but smart ppl say: DONT)
     call(start_vpn, shell=True)
 
 
-def main(passfile=None, refresh=False, connect=False):
+def main(passfile=None, refresh=True, connect=False):
 
     if passfile and not path.exists(path.realpath(passfile)):
         raise IOError(
@@ -134,8 +137,9 @@ def main(passfile=None, refresh=False, connect=False):
     #TODO: DO YOU WANT TO KEEP THIS SCRIPT RUNNING IN THE BACKGROUND ALWAYS OR DO YOU WANT TO MODIFY CRONTAB?
     ''' ANSWER How about a variable along the lines of  'refresh servers if it's been > X hours' 
         Would rather keep this program contained than fuck with system processes.
-    
     '''
+    #TODO: I agree. Windows & mac don't have cron.
+    #TODO: What do you think about making a seperate daemon process that calls this one? yah?
     if refresh:
         update_servers()
 

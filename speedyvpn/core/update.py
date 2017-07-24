@@ -9,16 +9,16 @@ from speedyvpn.utils.custom_errors import ImpossibleError
 
 def check_ovpn_dir(root_dir_path):
     """
-    This function checks to see if the OVPN/ directory is present inside the users HOME directory.
+    This function checks to see if the .speedyvpn/ directory is present inside the users HOME directory.
       - If it IS NOT, it creates it or throws an error if there is a name-conflict with a file.
       - If it IS, it clears it out.
 
     :param root_dir_path: default is the users $HOME env-variable (%HOME% on windows).
 
-    :return: the absolute path of the OVPN/ directory
+    :return: the absolute path of the .speedyvpn/ directory
     """
     # os.path.realpath() gives us an abs-path from a relative-path when applicable. It's never not safe to use...
-    ovpn_dir_path = os.path.realpath(os.path.join(root_dir_path, 'OVPN'))
+    ovpn_dir_path = os.path.realpath(os.path.join(root_dir_path, '.speedyvpn'))
 
     # 3 things are possible. Handle each.
     if not os.path.exists(ovpn_dir_path):
@@ -63,19 +63,18 @@ def download_and_extract_nord_zipfile(ovpn_dir_path):
 
 
 
-#TODO: Figure out if `HOME` is an environment variable on Mac. It is on Win & Linux.
-def update_servers_sh_replacement(root_dir_path=os.environ['HOME']):
-    assert os.path.exists(root_dir_path) and os.path.isdir(root_dir_path), 'please provide a valid starting directory.'
-    ovpn_dir_pth = check_ovpn_dir(root_dir_path)
 
+def update(root_dir_path=os.environ['HOME']):
+    assert os.path.exists(root_dir_path) and os.path.isdir(root_dir_path), 'please provide a valid starting directory.'
+    # The following function should give back a longer path.
+    ovpn_dir_pth = check_ovpn_dir(root_dir_path)
     # potentially unnecessary assert statement, but a good check.
-    # TODO: Maybe remove later.
     assert os.path.exists(ovpn_dir_pth)
     download_and_extract_nord_zipfile(ovpn_dir_pth)
 
 
 
 if __name__ == '__main__':
-    update_servers_sh_replacement()
+    update()
 
 
