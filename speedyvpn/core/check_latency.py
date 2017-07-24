@@ -23,6 +23,7 @@ def update_servers(*args):
     else:
         update(args[0])
 
+
 def threadPool():
     """
     Step 2: collect latencies and store them inside Collector.
@@ -35,7 +36,7 @@ def threadPool():
         pass
 
 
-def get_servers(ovpn_root_dir=os.environ['HOME']):
+def get_servers(ovpn_root_dir=os.environ['HOME'], retry=False):
     """
     Step 2a: match tcp servers in the US in ovpn folder.
     ====================================================
@@ -45,7 +46,14 @@ def get_servers(ovpn_root_dir=os.environ['HOME']):
         ovpn_targets = glob(Collector.ovpn_dir_path + match + '*' + 'tcp*')
     else:
         opvn_targets = glob(ovpn_root_dir + '/.speedyvpn/' + match + '*' + 'tcp*')
-    assert len(opvn_targets) > 1
+
+    if len(opvn_targets) < 1:
+        if retry == False:
+            update_servers()
+            return get_servers(retry=True)
+
+        else:
+            raise Exception('No opvn files saved')
     return opvn_targets
 
 
