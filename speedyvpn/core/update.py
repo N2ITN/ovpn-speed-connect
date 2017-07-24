@@ -5,6 +5,7 @@ import zipfile
 # don't be surprised if your editor says there is no "urlopen." six is wonky like that.
 from six.moves.urllib.request import urlopen
 
+from speedyvpn.core.Collector import Collector
 from speedyvpn.utils.custom_errors import ImpossibleError
 
 def check_ovpn_dir(root_dir_path):
@@ -66,12 +67,18 @@ def download_and_extract_nord_zipfile(ovpn_dir_path):
 
 
 
-def update(root_dir_path=os.environ['HOME']):
+def update(root_dir_path=os.environ['HOME'], set_collector_path=True):
     assert os.path.exists(root_dir_path) and os.path.isdir(root_dir_path), 'please provide a valid starting directory.'
     # The following function should give back a longer path.
     ovpn_dir_pth = check_ovpn_dir(root_dir_path)
     # potentially unnecessary assert statement, but a good check.
     assert os.path.exists(ovpn_dir_pth)
+
+    # Urrythang is gonna rely on that singleton but I'm sick of passing around names.
+    if set_collector_path is True:
+        Collector.ovpn_dir_path = ovpn_dir_pth
+
+    # wat is says.
     download_and_extract_nord_zipfile(ovpn_dir_pth)
 
 

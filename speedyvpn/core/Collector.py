@@ -5,6 +5,7 @@ class Collector(object):
       - provides formatting
 
      """
+    ovpn_dir_path = ''
     souls = []
     errors = []
 
@@ -41,4 +42,10 @@ class Collector(object):
 
     @classmethod
     def chicken_dinner(cls):
-        return '/'.join(['OVPN', cls.sort_results()[0]['name']])
+        if not cls.ovpn_dir_path:
+            return '/'.join(['.speedyvpn', cls.sort_results()[0]['name']])
+        else:
+            from os.path import split
+            res = '/'.join([split(cls.ovpn_dir_path)[1], cls.sort_results()[0]['name']])
+            del split
+            return res

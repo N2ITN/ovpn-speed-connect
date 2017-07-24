@@ -41,7 +41,10 @@ def get_servers(ovpn_root_dir=os.environ['HOME']):
     ====================================================
     """
     match = 'us'
-    opvn_targets = glob(ovpn_root_dir + '/OVPN/' + match + '*' + 'tcp*')
+    if Collector.ovpn_dir_path:
+        ovpn_targets = glob(Collector.ovpn_dir_path + match + '*' + 'tcp*')
+    else:
+        opvn_targets = glob(ovpn_root_dir + '/.speedyvpn/' + match + '*' + 'tcp*')
     assert len(opvn_targets) > 1
     return opvn_targets
 
