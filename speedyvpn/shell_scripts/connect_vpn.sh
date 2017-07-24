@@ -1,0 +1,1 @@
+sudo openvpn OVPN/us570.nordvpn.com.tcp443.ovpn

@@ -1,0 +1,3 @@
+class ImpossibleError(BaseException):
+    pass
+
