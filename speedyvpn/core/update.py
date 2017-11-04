@@ -54,7 +54,7 @@ def download_and_extract_nord_zipfile(ovpn_dir_path):
 
     :return: NUTHIN'
     """
-    zip_data = urlopen('https://nordvpn.com/api/files/zip').read()
+    zip_data = urlopen('https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip').read()
     zipfile_path = os.path.join(ovpn_dir_path, 'zipfile.zip')
     with open(zipfile_path, 'wb+') as nord_zipfile:
         nord_zipfile.write(zip_data)
